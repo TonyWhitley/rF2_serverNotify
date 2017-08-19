@@ -1,14 +1,14 @@
 # rF2_serverNotify
 Scan a set of rFactor 2 servers and send a notification if someone joins a server that had no drivers.
 
-rF2_serverNotify.json has two types of dictionary entry:
-  a) ServerX : 'name of server to be scanned'
-      There can be any number of Server entries.
-      Text beyond 'Server' is ignored.
-  b) Interval : 30   
-      seconds between checking the servers
+The progam is configured by the file <i>rF2_serverNotify.json</i> which has two types of dictionary entry:<br>
+  a) Server<i>X</i> : '<i>name of server to be scanned</i>'<br>
+      There can be any number of Server entries.<br>
+      Text beyond <i>Server</i> is ignored.<br>
+  b) Interval : 30<br>
+      seconds between checking the servers<br>
 
-servers.file.json contains all the servers and their addresses. 
-It is created automatically the first time the program is run.
+A data file <i>servers.file.json</i> is created automatically the first time the program is run.<br>
+It contains all the servers and their addresses.<br>
 
-Also included are the Behave BDD files used to write the code.
+<i>(Also included are the Behave BDD files used to write the code.)</i>
