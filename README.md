@@ -12,4 +12,5 @@ It has two types of dictionary entry:<br>
 A data file <i>servers.file.json</i> is created automatically the first time the program is run.<br>
 It contains all the servers and their addresses.<br>
 
+Click on the Releases tab to find an .exe file created from the Python with pyinstaller and a sample rF2_serverNotify.json.<br><br>
 <i>(Also included are in the source the Behave BDD files used to write the code.)</i>
