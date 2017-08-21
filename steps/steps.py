@@ -1,3 +1,4 @@
+# pylint: skip-file
 import rF2_serverNotify
 
 # Notification file tests
@@ -46,16 +47,16 @@ def step_impl(context, server):
 @when(u'the servers are read')
 def step_impl(context):
   # read the real list of servers - takes a few minutes
-  context.serverObj = rF2_serverNotify.servers()
+  context.serverObj = rF2_serverNotify.Servers()
   context.serverObj.readServers()
 
 @when(u'the servers file is set up')
 def step_impl(context):
-  context.serverObj = rF2_serverNotify.servers()
+  context.serverObj = rF2_serverNotify.Servers()
 
 @when(u'the servers are faked')
 def step_impl(context):
-  context.serverObj = rF2_serverNotify.servers()
+  context.serverObj = rF2_serverNotify.Servers()
   context.serverObj.fakeServers()
 
 @when(u'the servers file is written')
