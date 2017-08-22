@@ -1,39 +1,32 @@
+"""
+A simple Python program to scan a set of rFactor 2 servers and pop up a
+notification if someone joins a server that had no drivers.
+
+The program is configured by the file rF2_serverNotify.json which should
+be edited with the server(s) of interest.
+It has two types of dictionary entry:
+a) ServerX : 'name of server to be scanned'
+    There can be any number of Server entries.
+    Text beyond Server is ignored, it's just needed to make each entry different.
+b) Interval : 30
+    seconds between checking the servers
+
+A data file servers.file.json is created automatically the first time
+ the program is run.
+It contains all the servers and their addresses.
+"""
+from __future__ import print_function  # Python 2 compatibility
+
 import os
 import sys
 import datetime
 import json
-import pymsgbox
 import time
-from msvcrt import kbhit, getch
+from   msvcrt import kbhit, getch
+import pymsgbox
 
 import valve.source.a2s
 import valve.source.master_server
-        
-class configFile:
-  def __init__(self, fname):
-    try:
-      with open(fname) as f:
-          self.records = f.read().splitlines()
-    except:
-      _errStr = 'Could not open "%s" to read' % os.path.join(os.getcwd(), fname)
-      print(_errStr)
-      self.records = [_errStr]
-      #sys.exit(99)
-    self.dict = {key: "Idle" for key in self.records}
-  def read(self):
-    return self.records[0]
-  def setStatus(self, server, status):
-    try:
-      self.dict[server] = status
-    except:
-      pass
-  def getStatus(self, server):
-    try:
-      ret = self.dict[server]
-    except KeyError:
-      ret = "Idle"
-    return ret
-
 
 class JSONconfigFile:
   """
@@ -41,12 +34,12 @@ class JSONconfigFile:
   a) ServerX : 'name of server to be scanned'
       There can be any number of Server entries.
       Text beyond 'Server' is ignored.
-  b) Interval : 30   
+  b) Interval : 30
       seconds between checking the servers
   """
-  def __init__(self, fname):
+  def __init__(self, _fname):
     #try:
-    with open(fname, 'r') as file:
+    with open(_fname, 'r') as file:
       self.serversDict = json.load(file)
     """
     except:
@@ -62,43 +55,50 @@ class JSONconfigFile:
         self.dict[value] = "Idle"
       if key == 'Interval':
         self.interval = value
-        
+
   def read(self):
     return self.serversDict['Server1']
   def getServers(self):
     return self.dict
-  def setStatus(self, server, status):
+  def setStatus(self, _server, _status):
     try:
-      self.dict[server] = status
-    except:
+      self.dict[_server] = _status
+    except KeyError:
       pass
-  def getStatus(self, server):
+  def getStatus(self, _server):
     try:
-      ret = self.dict[server]
+      ret = self.dict[_server]
     except KeyError:
       ret = "Idle"
     return ret
   def getInterval(self):
     return self.interval
-    
-class servers:
+
+class Servers:
+  """
+  Gets the list of all servers and their addresses.
+  Writes/reads the info to a data file (as it takes a couple of minutes
+  to read them from Steam).
+  Gets the status of a particular server.
+  """
   def __init__(self):
-    pass
-  def readServers(self, masterServer = None):
-    msq = valve.source.master_server.MasterServerQuerier()
     self.serversDict = {}
-    for address in msq.find(appid = '365960'):
-        #region=["eu", "as"], gamedir="rFactor 2"):
-        #print ("{0}:{1}".format(*address))
-        try:
-          server = valve.source.a2s.ServerQuerier(address)
-          info = server.get_info()
-          serverName = info["server_name"]
-          self.serversDict[serverName] = address
-        except valve.source.a2s.NoResponseError:
-          pass
-          #print('%s:%d timed out' % SERVER_ADDRESS)
-          
+    self.players = ''
+    self.driverFilter = DriversFilter('drivers.txt')
+  def readServers(self):
+    msq = valve.source.master_server.MasterServerQuerier()
+    for address in msq.find(appid='365960'):
+      #region=["eu", "as"], gamedir="rFactor 2"):    Didn't work
+      #print ("{0}:{1}".format(*address))
+      try:
+        _server = valve.source.a2s.ServerQuerier(address)
+        info = _server.get_info()
+        serverName = info["server_name"]
+        self.serversDict[serverName] = address
+      except valve.source.a2s.NoResponseError:
+        pass
+        #  Debug print('%s:%d timed out' % SERVER_ADDRESS)
+
   def writeServersFile(self, filename):
     with open(filename, 'w') as file:
       file.write(json.dumps(self.serversDict, sort_keys=True, indent=2))
@@ -106,16 +106,13 @@ class servers:
   def readServersFile(self, filename):
     with open(filename, 'r') as file:
       self.serversDict = json.load(file)
-  
-#  def _getServers_TEST(self):
-#    return self.serversDict
 
   def fakeServers(self):
     self.serversDict = {
-      "F1_1979_Official_Server_1" : ['46.9.118.148', 62299],
-      "F1_1979_Official_Server_2" : ['46.9.118.149', 64399],
-      "RSVRsig-racing.boards.net" : ['86.163.28.215', 64299]
-      }
+        "F1_1979_Official_Server_1" : ['46.9.118.148', 62299],
+        "F1_1979_Official_Server_2" : ['46.9.118.149', 64399],
+        "RSVRsig-racing.boards.net" : ['86.163.28.215', 64299]
+        }
 
   def getServerAddress(self, serverName):
     try:
@@ -132,32 +129,56 @@ class servers:
     return _port
 
   def getServerStatus(self, serverName):
+    """
+    Read the server status, return
+    Idle (No players on the server)
+    Active (and load self.players with the names)
+    NoResponse
+    """
     if serverName in self.serversDict:
       try:
-        #print(SERVER_ADDRESS)
 
-        server = valve.source.a2s.ServerQuerier(self.serversDict[serverName])
+        _server = valve.source.a2s.ServerQuerier(self.serversDict[serverName])
         try:
-          info = server.get_info()
-          if info["player_count"] == 0:
-            return "Idle"
-          ########## UGH!
-          players = server.get_players()
-          for player in sorted(players["players"],
-                   key=lambda p: p["score"], reverse=True):
-              self.player = ' '.join(("{score} {name}".format(**player)).split()[1:])
-          ########## UGH!
-          return "Active"
+          info = _server.get_info()
+          _status = 'Idle'
+          if info["player_count"] != 0:
+            _status = 'Active but only AI drivers'
+            self.players = 'On the server:'
+            players = _server.get_players()
+            for p in range(players.values['player_count']):
+              _player = players.values['players'][p].values['name']
+              if self.driverFilter.match(_player) == 'Human':
+                self.players += '\n' + _player
+                _status = "Active"
+          return _status
         except valve.source.a2s.NoResponseError:
           pass
 
       except valve.source.a2s.NoResponseError:
         pass
         #print('%s:%d timed out' % SERVER_ADDRESS)
-    return "Idle"
+    return "NoResponse"
 
-def alert(server, driver):
-  pymsgbox.alert("%s is on the server!" % driver, '%s is active' % server)
+class DriversFilter:
+  """
+  Use a file of names of AI drivers to check whether a driver is human.
+  """
+  def __init__(self, _driversFileName):
+    try:
+      with open(_driversFileName, 'r') as file:
+        self.drivers = file.read().splitlines()
+    except FileNotFoundError:
+      print('Could not open "%s"' % _driversFileName)
+      self.drivers = []
+  def match(self, _driversName):
+    if _driversName in self.drivers:
+      return "AI"
+    return "Human"
+
+
+def alert(_server, _driver):
+  pymsgbox.alert("%s" % _driver, '%s is active' % _server)
 
 if __name__ == '__main__':
   serversFilename = 'servers.file.json'
@@ -165,12 +186,12 @@ if __name__ == '__main__':
     fname = sys.argv[1]
   else:
     fname = 'rF2_serverNotify.json'
-  
+
   print('Using config file %s\n' % fname)
 
   try:
     configFileO = JSONconfigFile(fname)
-    serverObj = servers()
+    serverObj = Servers()
     if not os.path.isfile(serversFilename):
       print('Finding available servers.  This may take a couple of minutes..')
       serverObj.readServers()
@@ -179,7 +200,7 @@ if __name__ == '__main__':
 
     serversDict = configFileO.getServers()
     interval = configFileO.getInterval()
-    
+
   except:
     print('Usage: %s <rF2_serverNotify config file>' % os.path.basename(sys.argv[0]))
     print('The config file must be a JSON file.')
@@ -192,12 +213,16 @@ if __name__ == '__main__':
     print('At %s these servers were idle (checking at %dS intervals):' % (_time, interval))
     for server, status in serversDict.items():
       if serverObj.getServerStatus(server) == "Active":
-        alert(server, serverObj.player)
+        alert(server, serverObj.players)
         sys.exit(0)
-      print('"%s"'% server)
+      elif serverObj.getServerStatus(server) == "Idle":
+        print('"%s" Idle'% server)
+      elif serverObj.getServerStatus(server) == "Active but only AI drivers":
+        print('"%s" Active but only AI drivers'% server)
+      else:
+        print('"%s" did not respond'% server)
+
     if kbhit() and getch() == b'\x1B':
-      print('\nEsc pressed')
+      print('\nEsc pressed')  # Quit
       sys.exit(1)
     time.sleep(interval)
-
-

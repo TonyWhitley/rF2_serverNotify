@@ -1,5 +1,7 @@
+# pylint: skip-file
 import rF2_serverNotify
 
+#######################################################
 # Notification file tests
 @given(u'I have the file name "{string}"')
 def step_impl(context, string):
@@ -25,6 +27,8 @@ def step_impl(context, server, status):
   assert _readStatus == status, \
     "Got %s" % _readStatus
 
+
+#######################################################
 # JSON config file tests
 @when(u'the JSON file is read')
 def step_impl(context):
@@ -34,8 +38,9 @@ def step_impl(context):
 @then(u'I see the interval 30')
 def step_impl(context):
     assert context.configFile.getInterval() == 30
-    
-    
+
+
+#######################################################
 # Live server tests
 @when(u'the server "{server}" is read')
 def step_impl(context, server):
@@ -46,16 +51,16 @@ def step_impl(context, server):
 @when(u'the servers are read')
 def step_impl(context):
   # read the real list of servers - takes a few minutes
-  context.serverObj = rF2_serverNotify.servers()
+  context.serverObj = rF2_serverNotify.Servers()
   context.serverObj.readServers()
 
 @when(u'the servers file is set up')
 def step_impl(context):
-  context.serverObj = rF2_serverNotify.servers()
+  context.serverObj = rF2_serverNotify.Servers()
 
 @when(u'the servers are faked')
 def step_impl(context):
-  context.serverObj = rF2_serverNotify.servers()
+  context.serverObj = rF2_serverNotify.Servers()
   context.serverObj.fakeServers()
 
 @when(u'the servers file is written')
@@ -74,46 +79,6 @@ def step_impl(context):
 def step_impl(context):
     context.serverObj.readServersFile('fake.servers.file.json')
 
-"""
-#(Not needed to test equality of dicts)
-def __equal(a, b):
-    type_a = type(a)
-    type_b = type(b)
-
-    if type_a != type_b:
-        return False
-
-    if isinstance(a, dict):
-        if len(a) != len(b):
-            return False
-        for key in a:
-            if key not in b:
-                return False
-            if not __equal(a[key], b[key]):
-                return False
-        return True
-
-    elif isinstance(a, list):
-        if len(a) != len(b):
-            return False
-        while len(a):
-            x = a.pop()
-            index = indexof(x, b)
-            if index == -1:
-                return False
-            del b[index]
-        return True
-
-    else:
-        return a == b
-
-def indexof(x, a):
-    for i in range(len(a)):
-        if __equal(x, a[i]):
-            return i
-    return -1
-"""    
-    
 @then(u'the servers match the fake servers')
 def step_impl(context):
   _readServers = context.serverObj.serversDict
@@ -123,7 +88,7 @@ def step_impl(context):
   print(_fakeServers)
   assert _readServers == _fakeServers
   #assert __equal(_readServers, _fakeServers)
-  
+
 
 
 @then(u'I see the address for "{server}" is "{address}"')
@@ -137,3 +102,22 @@ def step_impl(context, server, port):
   _readPort = context.serverObj.getServerPort(server)
   assert _readPort == int(port), \
     "Got %s" % _readPort
+
+#######################################################
+# AI driver filter
+@given(u'I have the drivers file name "{driversTxtFile}"')
+def step_impl(context, driversTxtFile):
+  context.driversTxtFile = driversTxtFile
+
+@when(u'the drivers file is read')
+def step_impl(context):
+  context.DFo = rF2_serverNotify.DriversFilter(context.driversTxtFile)
+  assert context.DFo.match('A J Foyt') == "AI"
+
+@when(u'the filter is "{driver}"')
+def step_impl(context, driver):
+  context.driver = driver
+
+@then(u'I see the driver status "{status}"')
+def step_impl(context, status):
+  assert context.DFo.match(context.driver) == status
