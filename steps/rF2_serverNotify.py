@@ -52,7 +52,7 @@ class JSONconfigFile:
     for key, value in self.serversDict.items():   # iter on both keys and values
       #print(key, value)
       if key.startswith('Server'):
-        self.dict[value] = "Idle"
+        self.dict[value] = 'Idle'
       if key == 'Interval':
         self.interval = value
 
@@ -69,7 +69,7 @@ class JSONconfigFile:
     try:
       ret = self.dict[_server]
     except KeyError:
-      ret = "Idle"
+      ret = 'Idle'
     return ret
   def getInterval(self):
     return self.interval
@@ -88,12 +88,12 @@ class Servers:
   def readServers(self):
     msq = valve.source.master_server.MasterServerQuerier()
     for address in msq.find(appid='365960'):
-      #region=["eu", "as"], gamedir="rFactor 2"):    Didn't work
-      #print ("{0}:{1}".format(*address))
+      #region=['eu', 'as'], gamedir='rFactor 2'):    Didn't work
+      #print ('{0}:{1}'.format(*address))
       try:
         _server = valve.source.a2s.ServerQuerier(address)
         info = _server.get_info()
-        serverName = info["server_name"]
+        serverName = info['server_name']
         self.serversDict[serverName] = address
       except valve.source.a2s.NoResponseError:
         pass
@@ -109,9 +109,9 @@ class Servers:
 
   def fakeServers(self):
     self.serversDict = {
-        "F1_1979_Official_Server_1" : ['46.9.118.148', 62299],
-        "F1_1979_Official_Server_2" : ['46.9.118.149', 64399],
-        "RSVRsig-racing.boards.net" : ['86.163.28.215', 64299]
+        'F1_1979_Official_Server_1' : ['46.9.118.148', 62299],
+        'F1_1979_Official_Server_2' : ['46.9.118.149', 64399],
+        'RSVRsig-racing.boards.net' : ['86.163.28.215', 64299]
         }
 
   def getServerAddress(self, serverName):
@@ -142,7 +142,7 @@ class Servers:
         try:
           info = _server.get_info()
           _status = 'Idle'
-          if info["player_count"] != 0:
+          if info['player_count'] != 0:
             _status = 'Active but only AI drivers'
             self.players = 'On the server:'
             players = _server.get_players()
@@ -150,7 +150,7 @@ class Servers:
               _player = players.values['players'][p].values['name']
               if self.driverFilter.match(_player) == 'Human':
                 self.players += '\n' + _player
-                _status = "Active"
+                _status = 'Active'
           return _status
         except valve.source.a2s.NoResponseError:
           pass
@@ -158,7 +158,7 @@ class Servers:
       except valve.source.a2s.NoResponseError:
         pass
         #print('%s:%d timed out' % SERVER_ADDRESS)
-    return "NoResponse"
+    return 'NoResponse'
 
 class DriversFilter:
   """
@@ -173,12 +173,12 @@ class DriversFilter:
       self.drivers = []
   def match(self, _driversName):
     if _driversName in self.drivers:
-      return "AI"
-    return "Human"
+      return 'AI'
+    return 'Human'
 
 
 def alert(_server, _driver):
-  pymsgbox.alert("%s" % _driver, '%s is active' % _server)
+  pymsgbox.alert('%s' % _driver, '%s is active' % _server)
 
 if __name__ == '__main__':
   serversFilename = 'servers.file.json'
@@ -187,6 +187,8 @@ if __name__ == '__main__':
   else:
     fname = 'rF2_serverNotify.json'
 
+  print('rF2_serverNotify V0.4')
+  print('=====================')
   print('Using config file %s\n' % fname)
 
   try:
@@ -206,21 +208,27 @@ if __name__ == '__main__':
     print('The config file must be a JSON file.')
     raise
 
-  print('Press Esc to quit (only checked every %dS)\n' % interval)
+  print('Press Esc to quit (only checked every %dS)' % interval)
+
+  # formatting
+  _longestServerName = 0
+  for server, status in serversDict.items():
+    if len(server) > _longestServerName:
+      _longestServerName = len(server)
 
   while True:
     _time = datetime.datetime.now().strftime('%I:%M %p')
-    print('At %s these servers were idle (checking at %dS intervals):' % (_time, interval))
+    print('\nAt %s these servers were idle (checking at %dS intervals):' % (_time, interval))
     for server, status in serversDict.items():
-      if serverObj.getServerStatus(server) == "Active":
+      if serverObj.getServerStatus(server) == 'Active':
         alert(server, serverObj.players)
         sys.exit(0)
-      elif serverObj.getServerStatus(server) == "Idle":
-        print('"%s" Idle'% server)
-      elif serverObj.getServerStatus(server) == "Active but only AI drivers":
-        print('"%s" Active but only AI drivers'% server)
+      elif serverObj.getServerStatus(server) == 'Idle':
+        print('%-*s  Idle' % (_longestServerName, server))
+      elif serverObj.getServerStatus(server) == 'Active but only AI drivers':
+        print('%-*s  Active but only AI drivers' % (_longestServerName, server))
       else:
-        print('"%s" did not respond'% server)
+        print('%-*s  did not respond' % (_longestServerName, server))
 
     if kbhit() and getch() == b'\x1B':
       print('\nEsc pressed')  # Quit
