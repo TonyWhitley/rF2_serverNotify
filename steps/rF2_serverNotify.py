@@ -92,7 +92,7 @@ class Servers:
       #print ('{0}:{1}'.format(*address))
       try:
         _server = valve.source.a2s.ServerQuerier(address)
-        info = _server.get_info()
+        info = _server.info()
         serverName = info['server_name']
         self.serversDict[serverName] = address
       except valve.source.a2s.NoResponseError:
@@ -140,12 +140,12 @@ class Servers:
 
         _server = valve.source.a2s.ServerQuerier(self.serversDict[serverName])
         try:
-          info = _server.get_info()
+          info = _server.info()
           _status = 'Idle'
           if info['player_count'] != 0:
             _status = 'Active but only AI drivers'
             self.players = 'On the server:'
-            players = _server.get_players()
+            players = _server.players()
             for p in range(players.values['player_count']):
               _player = players.values['players'][p].values['name']
               if self.driverFilter.match(_player) == 'Human':

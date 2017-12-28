@@ -4,3 +4,9 @@
 
 /makeexe.bat
 /servers.file.json
+/build/rF2_serverNotify
+/env
+/steps/__pycache__
+*.spec
+/rF2_serverNotify.exe
+*.suo
