@@ -10,3 +10,4 @@
 *.spec
 /rF2_serverNotify.exe
 *.suo
+/rF2_serverNotify.sln
