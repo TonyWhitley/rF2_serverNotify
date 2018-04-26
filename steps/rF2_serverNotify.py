@@ -133,6 +133,7 @@ class Servers:
     Read the server status, return
     Idle (No players on the server)
     Active (and load self.players with the names)
+    ServerNotInList
     NoResponse
     """
     if serverName in self.serversDict:
@@ -158,6 +159,8 @@ class Servers:
       except valve.source.a2s.NoResponseError:
         pass
         #print('%s:%d timed out' % SERVER_ADDRESS)
+    else: # serverName not in self.serversDict
+      return 'ServerNotInList'
     return 'NoResponse'
 
 class DriversFilter:
@@ -195,7 +198,7 @@ if __name__ == '__main__':
     configFileO = JSONconfigFile(fname)
     serverObj = Servers()
     if not os.path.isfile(serversFilename):
-      print('Finding available servers.  This may take a couple of minutes..')
+      print('Stored file of available servers %s does not exist, creating it. This will take a couple of minutes...' % serversFilename)
       serverObj.readServers()
       serverObj.writeServersFile(serversFilename)
     serverObj.readServersFile(serversFilename)
@@ -227,6 +230,8 @@ if __name__ == '__main__':
         print('%-*s  Idle' % (_longestServerName, server))
       elif serverObj.getServerStatus(server) == 'Active but only AI drivers':
         print('%-*s  Active but only AI drivers' % (_longestServerName, server))
+      elif serverObj.getServerStatus(server) == 'ServerNotInList':
+        print('%-*s  not in server list %s' % (_longestServerName, server, serversFilename))
       else:
         print('%-*s  did not respond' % (_longestServerName, server))
 
