@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{aa4be2fb-2ae3-4b2b-8677-0cbcb2f75bac}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>steps\rF2_serverNotify.py</StartupFile>
+    <StartupFile>steps\rF2_serversWithHumans.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -24,6 +24,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="steps\rF2_serverNotify.py" />
+    <Compile Include="steps\rF2_serversWithHumans.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="steps\steps.py" />
   </ItemGroup>
   <ItemGroup>

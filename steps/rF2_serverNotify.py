@@ -163,6 +163,9 @@ class Servers:
       return 'ServerNotInList'
     return 'NoResponse'
 
+  def getServerNames(self):
+    return self.serversDict
+
 class DriversFilter:
   """
   Use a file of names of AI drivers to check whether a driver is human.
@@ -179,29 +182,36 @@ class DriversFilter:
       return 'AI'
     return 'Human'
 
-
-def alert(_server, _driver):
-  pymsgbox.alert('%s' % _driver, '%s is active' % _server)
-
-if __name__ == '__main__':
+def readServersFile():
   serversFilename = 'servers.file.json'
-  if len(sys.argv) > 1:
-    fname = sys.argv[1]
-  else:
-    fname = 'rF2_serverNotify.json'
-
-  print('rF2_serverNotify V0.4')
-  print('=====================')
-  print('Using config file %s\n' % fname)
-
   try:
-    configFileO = JSONconfigFile(fname)
     serverObj = Servers()
     if not os.path.isfile(serversFilename):
       print('Stored file of available servers %s does not exist, creating it. This will take a couple of minutes...' % serversFilename)
       serverObj.readServers()
       serverObj.writeServersFile(serversFilename)
     serverObj.readServersFile(serversFilename)
+    return serverObj
+  except:
+    print('Failed to read %s. Exiting.' % serversFilename)
+    sys.exit(99)
+
+def alert(_server, _driver):
+  pymsgbox.alert('%s' % _driver, '%s is active' % _server)
+
+if __name__ == '__main__':
+  if len(sys.argv) > 1:
+    fname = sys.argv[1]
+  else:
+    fname = 'rF2_serverNotify.json'
+
+  print('rF2_serverNotify V0.5')
+  print('=====================')
+  print('Using config file %s\n' % fname)
+
+  try:
+    configFileO = JSONconfigFile(fname)
+    serverObj = readServersFile()
 
     serversDict = configFileO.getServers()
     interval = configFileO.getInterval()

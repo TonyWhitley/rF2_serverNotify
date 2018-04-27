@@ -186,9 +186,11 @@ Daniel Mihalik #55
 Daniel Morad
 Daniel Morad '07
 Daniel Nyffeler #33
+Daniel Ricciardo
 Daniel Vazquez
 Daniel Vereczi #95
 Daniela Schmid
+Daniil Kvyat
 Danny Watts
 Dany Slowaksky
 Daren Law
@@ -279,9 +281,12 @@ Fabio Onidi
 Faisal Binladen
 Fawaz Algosaibi
 Federico Montoya
+Felipe Massa
 Felipe Ortiz
+Fernando Alonso
 Fernando Ortez
 Fernando Rees
+Ferrari TestDriver
 Filipe Albuquerque
 Florian Spengler
 Francesco Castellacci
@@ -339,6 +344,7 @@ Guy Smith
 H. Huysman
 H. O. Rensing
 H. Stuck
+Haas TestDriver
 Hamad Al Farden
 Hamza Dirani
 Hans Giedo Riegel
@@ -422,6 +428,7 @@ Jelle Beelen
 Jens Hoing
 Jens Klingmann
 Jens Petersen
+Jenson Button
 Jeroen Bleekemolen
 Jeroen Mul
 Jeroen Schothorst
@@ -515,11 +522,13 @@ Kenji Kobayashi
 Kevin Estre
 Kevin Gilardoni
 Kevin Kubatu
+Kevin Magnussen
 Kevin Miller
 Kevin Mirocha
 Kevin Snoeks
 Kevin Veltman
 Khaled Al Qubaisi
+Kimi Räikkönen
 Kirill Ladygin
 Kirk H.
 Klause Manning
@@ -546,6 +555,7 @@ Leo Kinnunen /pedro rodriguez
 Leo Mansell
 Leonard Hofstadter
 Leslie Simonson
+Lewis Hamilton
 Lisa Brunner #44
 Lloyd Ruby
 Loren Beggs
@@ -581,6 +591,7 @@ Marco Idili
 Marco Raschiani
 Marco Santos
 Marco Sorensen
+Marcus Ericsson
 Margot Laffite
 Mario Andretti
 Mario Cabral
@@ -626,6 +637,7 @@ Max Coates #71
 Max Cohen-Olivar
 Max Hanratty
 Max Snegirev
+Max Verstappen
 Maxime Martin
 Maxime Pelletier
 Maximilian Gotz
@@ -690,6 +702,7 @@ Nick de Bruijn
 Nicki Thiim
 Nicklas Oscarsson #81
 Nicky Cuypers
+Nico Hulkenberg
 Nico Pieter De Bruijn
 Nicola Cadei
 Nicola Larini
@@ -728,6 +741,7 @@ Parker Thompson
 Parnelli Jones
 Parthiva Sureshwaren
 Pascal Gibon
+Pascal Wehrlein
 Patrick Bornhauser
 Patrick Dempsey
 Patrick Depailler
@@ -786,6 +800,7 @@ Ralph Meichtry
 Ray Angus
 Razvan Umbrarescu #4
 Red Amick
+RedBull TestDriver
 Reinhold Jost/Willy Kauhsen
 Rene Arnoux
 Rene Leutenegger #6
@@ -832,6 +847,7 @@ Roland Hertner #50
 Roland Ratzenberger
 Roland Schmid #7
 Rolf Stommelen
+Romain Grosjean
 Romain Monti
 Roman Golikov
 Roman Romanov
@@ -867,12 +883,14 @@ Sebastiaan Bleekemolen #57
 Sebastian Bernanke
 Sebastian Buemi
 Sebastian Saavedra
+Sebastian Vettel
 Sebastien Buemi
 Sebastien Loeb
 Seisaku Suzuki
 Sekiguchi
 Sergeant Whoopass
 Sergey Ryabov
+Sergio Perez
 Sergio Perez
 Shane Lewis
 Shorty Templeman
@@ -962,6 +980,7 @@ Tony Roberts
 Tony Trimmer
 Tony Vlad
 Tor Graves
+ToroRosso TestDriver
 Toto Howard
 Townsend Bell
 Tracy Krohn
@@ -972,6 +991,7 @@ Tung Ho-Pin
 Uriah Groban
 Uwe Alzen
 Valentino Rossi
+Valtteri Bottas
 Vern Schuppan
 Vic Elford
 Vic Elford/Kurt Ahrens Jr.
@@ -991,6 +1011,7 @@ Walter Crankshaw
 Walter Samson
 Warren Hughes
 Wayne Weiler
+Williams TestDriver
 Wilson Fittipaldi
 Wojtek Kedzierski
 Wolf Henzler
