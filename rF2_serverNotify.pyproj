@@ -23,6 +23,9 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="steps\module1.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="steps\rF2_serverNotify.py" />
     <Compile Include="steps\rF2_serversWithHumans.py">
       <SubType>Code</SubType>

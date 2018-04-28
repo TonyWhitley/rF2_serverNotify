@@ -11,3 +11,7 @@
 /rF2_serverNotify.exe
 *.suo
 /rF2_serverNotify.sln
+/build/rF2_serversWithHumans
+/steps/module1.py
+/steps/rF2_serverNotifyMultiprocess.py
+*.exe

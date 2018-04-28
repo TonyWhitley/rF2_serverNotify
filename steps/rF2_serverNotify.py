@@ -24,6 +24,7 @@ import json
 import time
 from   msvcrt import kbhit, getch
 import pymsgbox
+from multiprocessing.dummy import Pool as ThreadPool 
 
 import valve.source.a2s
 import valve.source.master_server
@@ -85,19 +86,42 @@ class Servers:
     self.serversDict = {}
     self.players = ''
     self.driverFilter = DriversFilter('drivers.txt')
-  def readServers(self):
-    msq = valve.source.master_server.MasterServerQuerier()
-    for address in msq.find(appid='365960'):
-      #region=['eu', 'as'], gamedir='rFactor 2'):    Didn't work
-      #print ('{0}:{1}'.format(*address))
+  def readServer(self, address):
+    for retry in range(3):
       try:
         _server = valve.source.a2s.ServerQuerier(address)
         info = _server.info()
         serverName = info['server_name']
-        self.serversDict[serverName] = address
+        return address, serverName
+        #self.serversDict[serverName] = address
       except valve.source.a2s.NoResponseError:
         pass
-        #  Debug print('%s:%d timed out' % SERVER_ADDRESS)
+    print('%s:%d timed out' % address)
+    return address, 'Timed out'
+  def readServers(self):
+    msq = valve.source.master_server.MasterServerQuerier()
+    addresses = []
+    all_addresses = msq.find(appid='365960')
+    for address in all_addresses:
+      addresses.append(address)
+
+    # Multi-thread querying all servers to speed things up
+    # (perhaps at the cost of missing some servers).
+    # make the Pool of workers
+    pool = ThreadPool(len(addresses)//10) 
+
+    # read the servers in their own threads
+    # and return the results
+    results = pool.map(self.readServer, addresses)
+
+    # close the pool and wait for the work to finish 
+    pool.close() 
+    pool.join() 
+
+    for r in results:
+      if r[1] != 'Timed out':
+        self.serversDict[r[1]] = r[0]
+    pass
 
   def writeServersFile(self, filename):
     with open(filename, 'w') as file:
@@ -205,7 +229,7 @@ if __name__ == '__main__':
   else:
     fname = 'rF2_serverNotify.json'
 
-  print('rF2_serverNotify V0.5')
+  print('rF2_serverNotify V0.6')
   print('=====================')
   print('Using config file %s\n' % fname)
 

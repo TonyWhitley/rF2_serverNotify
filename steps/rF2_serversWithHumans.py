@@ -16,10 +16,11 @@ import rF2_serverNotify
 
 if __name__ == '__main__':
 
-  print('rF2_serversWithHumans V0.1')
+  print('rF2_serversWithHumans V0.2')
   print('==========================')
-  print('\nPress Esc to quit')
   serverObj = rF2_serverNotify.readServersFile()
+
+  print('\nPress Esc to quit')
 
   for server in serverObj.getServerNames():
     if serverObj.getServerStatus(server) == 'Active':
@@ -29,3 +30,5 @@ if __name__ == '__main__':
     if kbhit() and getch() == b'\x1B':
       print('\nEsc pressed')  # Quit
       sys.exit(1)
+  print('\n\nAll done. Press a key...')
+  getch()

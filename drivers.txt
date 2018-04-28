@@ -9,6 +9,7 @@ Adam Lacko
 Ade Allen
 Ade Gorman
 Adrian Fernandez
+Adrian Sutil
 Adrien Herber
 Airon Smithe
 Al Broderick
@@ -138,8 +139,10 @@ Cantaro Harold
 Carlos Garcia
 Carlos Pace
 Carlos Reutemann
+Carlos Sainz
 Chandler Stohl
 Charles Jameson
+Charles Leclerc
 Charles Ng
 Charles Pic
 Charlie Charlez
@@ -274,6 +277,8 @@ Eric Lebeau
 Eric Lux
 Eric van de Poele
 Ernie Mantooth
+Esteban Gutierrez
+Esteban Ocon
 F. Jelinski
 Fabien Giroix
 Fabio Babini
@@ -328,6 +333,7 @@ Giacomo Piccini
 Gianluca Giraudi
 Gianluca Roda
 Gianmaria Bruni
+Giedo van der Garde
 Gilles Villeneuve
 Giovanni Lavaggi
 Giovanni Scala
@@ -419,6 +425,7 @@ Jason Mound
 Jean Pierre Jabouille
 Jean Pierre Jarier
 Jean Pierre Lefort
+Jean-Eric Vergne
 Jean-Louis Schlesser
 Jean-Luc Beaubelique
 Jean-Marie Alméras
@@ -499,6 +506,7 @@ Jorgan Continanza
 Jos Verstappen
 Josh Barnes
 José Luis Abadin
+Jules Bianchi
 Jules Duc
 Julian Bailey
 Julien Briche
@@ -528,6 +536,7 @@ Kevin Mirocha
 Kevin Snoeks
 Kevin Veltman
 Khaled Al Qubaisi
+Kimi Raikkonen
 Kimi Räikkönen
 Kirill Ladygin
 Kirk H.
@@ -542,6 +551,7 @@ Krumm
 Kuba Giermaziak
 Kunimitsu Takahashi
 Kyle Herder
+Lance Stroll
 Larry Gervais
 Lars Viljoen
 Laureen McCormik
@@ -602,6 +612,7 @@ Mark Donohue
 Mark Galvin
 Mark Sarrogh
 Mark Stanton
+Mark Webber
 Markus Niemela
 Markus Paltalla
 Markus Palttala
@@ -704,6 +715,7 @@ Nicklas Oscarsson #81
 Nicky Cuypers
 Nico Hulkenberg
 Nico Pieter De Bruijn
+Nico Rosberg
 Nicola Cadei
 Nicola Larini
 Nicolas Hulkenberg
@@ -742,6 +754,7 @@ Parnelli Jones
 Parthiva Sureshwaren
 Pascal Gibon
 Pascal Wehrlein
+Pastor Maldonado
 Patrick Bornhauser
 Patrick Dempsey
 Patrick Depailler
@@ -761,6 +774,7 @@ Paul Hawkins
 Paul Loup Chatin
 Paul Rees
 Paul Van Splunteren
+Paul di Resta
 Pedro Lamy
 Penn Payne
 Pete Aron
@@ -782,6 +796,7 @@ Piercarlo Ghinzani
 Pierluigi Martini
 Pierre Dieudonne
 Pierre Ehret
+Pierre Gasly
 Pierre Gual
 Pierre Kaffer
 Pierre Paoli
@@ -890,7 +905,7 @@ Seisaku Suzuki
 Sekiguchi
 Sergeant Whoopass
 Sergey Ryabov
-Sergio Perez
+Sergey Sirotkin
 Sergio Perez
 Shane Lewis
 Shorty Templeman
@@ -923,6 +938,7 @@ Steven Ciofalo
 Steven Guerrero
 Steven Richards
 Stewart Bloom
+Stoffel Vandoorne
 Stuart Hall
 Stuart Moseley
 Stuart Rossin
