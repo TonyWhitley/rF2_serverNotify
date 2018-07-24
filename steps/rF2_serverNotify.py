@@ -91,10 +91,12 @@ class Servers:
       try:
         _server = valve.source.a2s.ServerQuerier(address)
         info = _server.info()
+        _server.close()
         serverName = info['server_name']
         return address, serverName
         #self.serversDict[serverName] = address
       except valve.source.a2s.NoResponseError:
+        _server.close()
         pass
     print('%s:%d timed out' % address)
     return address, 'Timed out'
@@ -235,7 +237,7 @@ if __name__ == '__main__':
 
   try:
     configFileO = JSONconfigFile(fname)
-    serverObj = readServersFile()
+    serverObj = rF2_serverNotify.readServersFile()
 
     serversDict = configFileO.getServers()
     interval = configFileO.getInterval()
@@ -249,6 +251,7 @@ if __name__ == '__main__':
 
   # formatting
   _longestServerName = 0
+  serversFilename = 'servers.file.json'   # this is a hack to overcome a change I made.
   for server, status in serversDict.items():
     if len(server) > _longestServerName:
       _longestServerName = len(server)

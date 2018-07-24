@@ -5,14 +5,13 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{aa4be2fb-2ae3-4b2b-8677-0cbcb2f75bac}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>steps\rF2_serversWithHumans.py</StartupFile>
+    <StartupFile>steps\rF2_joinServer.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>
-    </CommandLineArguments>
+    <CommandLineArguments>rF2_joinServer3.json</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <IsWindowsApplication>False</IsWindowsApplication>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
@@ -23,7 +22,7 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="steps\module1.py">
+    <Compile Include="steps\rF2_joinServer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="steps\rF2_serverNotify.py" />
@@ -40,6 +39,8 @@
   <ItemGroup>
     <Content Include="drivers.txt" />
     <Content Include="requirements.txt" />
+    <Content Include="rF2_joinServer.json" />
+    <Content Include="rF2_joinServer2.json" />
     <Content Include="tests\features\AIdriverFilter.feature" />
     <Content Include="tests\features\jsonConfigFile.feature" />
     <Content Include="tests\features\rF2_liveServerNotify.feature" />
