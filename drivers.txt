@@ -1,3 +1,4 @@
+#AI players identified by scraping data files
 A J Foyt
 A. J. Foyt
 A.J. Foyt
@@ -1044,3 +1045,4 @@ Yoshiyuki Ogura
 Yufeng Luo
 Zachery Nosse
 Zoltan Levai #21
+#AI players identified because they were connected for an identical time

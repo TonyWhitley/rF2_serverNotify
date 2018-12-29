@@ -5,13 +5,13 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{aa4be2fb-2ae3-4b2b-8677-0cbcb2f75bac}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>steps\rF2_joinServer.py</StartupFile>
+    <StartupFile>steps\rF2_serversWithHumans.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>rF2_joinServer3.json</CommandLineArguments>
+    <CommandLineArguments>rF2_joinServer_SiG.json</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <IsWindowsApplication>False</IsWindowsApplication>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>

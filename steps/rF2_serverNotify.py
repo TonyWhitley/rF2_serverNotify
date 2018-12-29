@@ -168,17 +168,28 @@ class Servers:
         _server = valve.source.a2s.ServerQuerier(self.serversDict[serverName])
         try:
           info = _server.info()
+          _track = info['map']
           _status = 'Idle'
           if info['player_count'] != 0:
             _status = 'Active but only AI drivers'
             self.players = 'On the server:'
             players = _server.players()
+            
+            # Check for players who've been playing for exactly the same time - they're AI
+            _duration = players.values['players'][0].values['duration']
+            for p in range(1, players.values['player_count']):
+              if players.values['players'][p].values['duration'] == _duration:
+                # Write player[0]'s name
+                self.driverFilter.addAI(players.values['players'][0].values['name'])
+                # Write this AI player's name
+                self.driverFilter.addAI(players.values['players'][p].values['name'])
+
             for p in range(players.values['player_count']):
               _player = players.values['players'][p].values['name']
               if self.driverFilter.match(_player) == 'Human':
                 self.players += '\n' + _player
                 _status = 'Active'
-          return _status
+          return _status, _track
         except valve.source.a2s.NoResponseError:
           pass
 
@@ -186,8 +197,8 @@ class Servers:
         pass
         #print('%s:%d timed out' % SERVER_ADDRESS)
     else: # serverName not in self.serversDict
-      return 'ServerNotInList'
-    return 'NoResponse'
+      return 'ServerNotInList', 'ServerNotInList'
+    return 'NoResponse', 'NoResponse'
 
   def getServerNames(self):
     return self.serversDict
@@ -197,6 +208,7 @@ class DriversFilter:
   Use a file of names of AI drivers to check whether a driver is human.
   """
   def __init__(self, _driversFileName):
+    self._driversFileName = _driversFileName
     try:
       with open(_driversFileName, 'r') as file:
         self.drivers = file.read().splitlines()
@@ -207,6 +219,15 @@ class DriversFilter:
     if _driversName in self.drivers:
       return 'AI'
     return 'Human'
+  def addAI(self, _AIname):
+    if not _AIname in self.drivers:
+      self.drivers.append(_AIname)
+      try:
+        with open(self._driversFileName, 'w') as file:
+          _drivers = '\n'.join(self.drivers)
+          file.write(_drivers)
+      except:
+        print('Could not write to "%s"' % self._driversFileName)
 
 def readServersFile():
   serversFilename = 'servers.file.json'

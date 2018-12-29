@@ -16,15 +16,16 @@ import rF2_serverNotify
 
 if __name__ == '__main__':
 
-  print('rF2_serversWithHumans V0.2')
+  print('rF2_serversWithHumans V0.3')
   print('==========================')
   serverObj = rF2_serverNotify.readServersFile()
 
   print('\nPress Esc to quit')
 
   for server in serverObj.getServerNames():
-    if serverObj.getServerStatus(server) == 'Active':
-      print('\nServer: %s has these drivers who are not in the AI list "drivers.txt"' % server)
+    _status,_track = serverObj.getServerStatus(server) 
+    if _status == 'Active':
+      print('\nServer: %s (%s)\nhas these drivers who are not in the AI list "drivers.txt"' % (server, _track))
       print(serverObj.players)
 
     if kbhit() and getch() == b'\x1B':
