@@ -175,14 +175,19 @@ class Servers:
             self.players = 'On the server:'
             players = _server.players()
             
-            # Check for players who've been playing for exactly the same time - they're AI
-            _duration = players.values['players'][0].values['duration']
-            for p in range(1, players.values['player_count']):
-              if players.values['players'][p].values['duration'] == _duration:
-                # Write player[0]'s name
-                self.driverFilter.addAI(players.values['players'][0].values['name'])
-                # Write this AI player's name
-                self.driverFilter.addAI(players.values['players'][p].values['name'])
+            if info['player_count'] > 1:
+              # Check for players who've been playing for exactly the same time - they're AI
+              _durations = []
+              for p in range(players.values['player_count']):
+                _durations.append(players.values['players'][p].values['duration'])
+              _durations.sort(reverse=True)
+              if _durations[0] == _durations[1]:
+                for p in range(players.values['player_count']):
+                  if players.values['players'][p].values['duration'] == _durations[0]:
+                    # Write this AI player's name
+                    self.driverFilter.addAI(players.values['players'][p].values['name'])
+                    #debug print(players.values['players'][p].values['name'], end=" ")
+                    #debug print(_durations[0])
 
             for p in range(players.values['player_count']):
               _player = players.values['players'][p].values['name']
