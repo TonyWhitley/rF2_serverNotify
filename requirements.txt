@@ -9,7 +9,7 @@ parse-type==0.4.2
 pip==9.0.1
 PyMsgBox==1.0.6
 python-valve==0.2.1
-requests==2.18.4
+requests==2.20.0
 setuptools==28.8.0
 six==1.11.0
 urllib3==1.22
