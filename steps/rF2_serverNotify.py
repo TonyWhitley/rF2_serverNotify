@@ -50,12 +50,19 @@ class JSONconfigFile:
       #sys.exit(99)
     """
     self.dict = {}
+    self.interval = None
     for key, value in self.serversDict.items():   # iter on both keys and values
       #print(key, value)
       if key.startswith('Server'):
         self.dict[value] = 'Idle'
       if key == 'Interval':
         self.interval = value
+    if len(self.dict) == 0:
+      print('%s must have entries like "Server1" : "S397 GT3 Nola" ,' % _fname)
+      sys.exit(98)
+    if self.interval == None:
+      print('%s must have an entry like "Interval" : 15  where 15 is the interval between checking servers' % _fname)
+      sys.exit(99)
 
   def read(self):
     return self.serversDict['Server1']
@@ -73,7 +80,10 @@ class JSONconfigFile:
       ret = 'Idle'
     return ret
   def getInterval(self):
-    return self.interval
+    try:
+      return self.interval
+    except AttributeError:
+      raise NameError
 
 class Servers:
   """
@@ -261,17 +271,16 @@ if __name__ == '__main__':
   print('=====================')
   print('Using config file %s\n' % fname)
 
+  serverObj = readServersFile()
+
   try:
     configFileO = JSONconfigFile(fname)
-    serverObj = rF2_serverNotify.readServersFile()
-
-    serversDict = configFileO.getServers()
-    interval = configFileO.getInterval()
-
   except:
     print('Usage: %s <rF2_serverNotify config file>' % os.path.basename(sys.argv[0]))
     print('The config file must be a JSON file.')
     raise
+  serversDict = configFileO.getServers()
+  interval = configFileO.getInterval()
 
   print('Press Esc to quit (only checked every %dS)' % interval)
 
@@ -286,14 +295,15 @@ if __name__ == '__main__':
     _time = datetime.datetime.now().strftime('%I:%M %p')
     print('\nAt %s these servers were idle (checking at %dS intervals):' % (_time, interval))
     for server, status in serversDict.items():
-      if serverObj.getServerStatus(server) == 'Active':
+      status, track = serverObj.getServerStatus(server) 
+      if status == 'Active':
         alert(server, serverObj.players)
         sys.exit(0)
-      elif serverObj.getServerStatus(server) == 'Idle':
+      elif status  == 'Idle':
         print('%-*s  Idle' % (_longestServerName, server))
-      elif serverObj.getServerStatus(server) == 'Active but only AI drivers':
+      elif status  == 'Active but only AI drivers':
         print('%-*s  Active but only AI drivers' % (_longestServerName, server))
-      elif serverObj.getServerStatus(server) == 'ServerNotInList':
+      elif status == 'ServerNotInList':
         print('%-*s  not in server list %s' % (_longestServerName, server, serversFilename))
       else:
         print('%-*s  did not respond' % (_longestServerName, server))

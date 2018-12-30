@@ -1,7 +1,7 @@
 {
-  "Server2" : "0RA Memorial Fun Run" ,
+  "Server2" : "SFA F1" ,
   "Server3" : "RSVR sig-racing.boards.net",
-  "Server1" : "PMW Racing Server" ,
-  "Server4" : "RSVR2 SiG Rain Test",
-  "Interval" : 3
+  "Server1" : "S397 GT3 Nola" ,
+  "Server4" : "S397 GT3 Palm Beach",
+  "Interval" : 15
 }
