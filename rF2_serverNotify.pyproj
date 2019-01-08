@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{aa4be2fb-2ae3-4b2b-8677-0cbcb2f75bac}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>steps\rF2_joinServer.py</StartupFile>
+    <StartupFile>steps\rF2_serversWithHumans.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -53,6 +53,15 @@
       <Id>env</Id>
       <Version>3.6</Version>
       <Description>env (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+    <Interpreter Include="valve\">
+      <Id>valve</Id>
+      <Version>3.6</Version>
+      <Description>valve (Python 3.6 (64-bit))</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>

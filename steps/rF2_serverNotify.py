@@ -23,7 +23,8 @@ import datetime
 import json
 import time
 from   msvcrt import kbhit, getch
-import pymsgbox
+if __name__ == '__main__':
+  import pymsgbox
 from multiprocessing.dummy import Pool as ThreadPool 
 
 import valve.source.a2s
@@ -172,48 +173,85 @@ class Servers:
     ServerNotInList
     NoResponse
     """
+    status, humans, AI, probables, info = self.getPlayerCounts(serverName)
+    if not status == 'OK':
+      return 'Idle', status
+    track = info['map']
+
+    if humans + AI + probables == 0:
+      _status = 'Idle'
+    if humans == 0:
+      _status = 'Active but only AI drivers'
+    else:
+      _status = 'Active'
+    return _status, track
+
+  """
+  What is needed (certainly for debugging) is a generator that returns servers one by one.
+  For debugging the real data should be read and then pickled so that the real data
+  can be unpickled much more quickly.  That's _server.info() and _server.players()
+  """
+
+  def getPlayerCounts(self, serverName):
+    """
+    Read the server status, return
+      number of apparent human players
+      number of AI players (names in drivers.txt)
+      number of probable AI players (on the server for exactly the same time)
+      Track name
+      Maximum number of players
+    """
+    humans = 0
+    AI = 0 
+    probables = 0
+    maxPlayers = 0
+
     if serverName in self.serversDict:
       try:
 
         _server = valve.source.a2s.ServerQuerier(self.serversDict[serverName])
         try:
           info = _server.info()
-          _track = info['map']
-          _status = 'Idle'
           if info['player_count'] != 0:
-            _status = 'Active but only AI drivers'
             self.players = 'On the server:'
             players = _server.players()
+            _server.close()
+
             
+            AI = info['player_count'] # initialise to "all players"
             if info['player_count'] > 1:
               # Check for players who've been playing for exactly the same time - they're AI
               _durations = []
               for p in range(players.values['player_count']):
                 _durations.append(players.values['players'][p].values['duration'])
               _durations.sort(reverse=True)
-              if _durations[0] == _durations[1]:
-                for p in range(players.values['player_count']):
-                  if players.values['players'][p].values['duration'] == _durations[0]:
+              for p in range(players.values['player_count']):
+                if _durations[0] == _durations[1] and \
+                  players.values['players'][p].values['duration'] == _durations[0]:
+                    probables += 1
+                    AI -= 1
                     # Write this AI player's name
-                    self.driverFilter.addAI(players.values['players'][p].values['name'])
+                    ### self.driverFilter.addAI(players.values['players'][p].values['name'])
                     #debug print(players.values['players'][p].values['name'], end=" ")
                     #debug print(_durations[0])
-
-            for p in range(players.values['player_count']):
-              _player = players.values['players'][p].values['name']
-              if self.driverFilter.match(_player) == 'Human':
-                self.players += '\n' + _player
-                _status = 'Active'
-          return _status, _track
+                else:
+                  _player = players.values['players'][p].values['name']
+                  if self.driverFilter.match(_player) == 'Human':
+                    humans += 1
+                    AI -= 1
+                    self.players += '\n' + _player
+          return 'OK', humans, AI, probables, info
         except valve.source.a2s.NoResponseError:
+          _server.close()
           pass
 
       except valve.source.a2s.NoResponseError:
+        _server.close()
         pass
         #print('%s:%d timed out' % SERVER_ADDRESS)
     else: # serverName not in self.serversDict
-      return 'ServerNotInList', 'ServerNotInList'
-    return 'NoResponse', 'NoResponse'
+      return 'ServerNotInList', 0,0,0, 'ServerNotInList'
+    return 'NoResponse', 0,0,0, 'NoResponse'
 
   def getServerNames(self):
     return self.serversDict
@@ -295,7 +333,7 @@ if __name__ == '__main__':
     _time = datetime.datetime.now().strftime('%I:%M %p')
     print('\nAt %s these servers were idle (checking at %dS intervals):' % (_time, interval))
     for server, status in serversDict.items():
-      status, track = serverObj.getServerStatus(server) 
+      status, track, maxPlayers = serverObj.getServerStatus(server) 
       if status == 'Active':
         alert(server, serverObj.players)
         sys.exit(0)

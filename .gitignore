@@ -15,3 +15,6 @@
 /steps/rF2_serverNotifyMultiprocess.py
 *.exe
 /build/rF2_joinServer
+/valve
+/steps/servers.file.json
+/steps/drivers.txt
