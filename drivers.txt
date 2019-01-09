@@ -1045,4 +1045,4 @@ Yoshiyuki Ogura
 Yufeng Luo
 Zachery Nosse
 Zoltan Levai #21
-#AI players identified because they were connected for an identical time
+#AI players identified because they were on two servers simultaneously

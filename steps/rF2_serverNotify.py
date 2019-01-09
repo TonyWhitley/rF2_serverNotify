@@ -95,7 +95,7 @@ class Servers:
   """
   def __init__(self):
     self.serversDict = {}
-    self.players = ''
+    self.players = []
     self.driverFilter = DriversFilter('drivers.txt')
   def readServer(self, address):
     for retry in range(3):
@@ -207,48 +207,52 @@ class Servers:
     maxPlayers = 0
 
     if serverName in self.serversDict:
-      try:
-
-        _server = valve.source.a2s.ServerQuerier(self.serversDict[serverName])
+      for retry in range(3):
         try:
-          info = _server.info()
-          if info['player_count'] != 0:
-            self.players = 'On the server:'
-            players = _server.players()
-            _server.close()
+
+          _server = valve.source.a2s.ServerQuerier(self.serversDict[serverName])
+          try:
+            info = _server.info()
+            if info['player_count'] != 0:
+              self.players = []
+              players = _server.players()
+              _server.close()
 
             
-            AI = info['player_count'] # initialise to "all players"
-            if info['player_count'] > 1:
-              # Check for players who've been playing for exactly the same time - they're AI
-              _durations = []
-              for p in range(players.values['player_count']):
-                _durations.append(players.values['players'][p].values['duration'])
-              _durations.sort(reverse=True)
-              for p in range(players.values['player_count']):
-                if _durations[0] == _durations[1] and \
-                  players.values['players'][p].values['duration'] == _durations[0]:
-                    probables += 1
-                    AI -= 1
-                    # Write this AI player's name
-                    ### self.driverFilter.addAI(players.values['players'][p].values['name'])
-                    #debug print(players.values['players'][p].values['name'], end=" ")
-                    #debug print(_durations[0])
-                else:
-                  _player = players.values['players'][p].values['name']
-                  if self.driverFilter.match(_player) == 'Human':
-                    humans += 1
-                    AI -= 1
-                    self.players += '\n' + _player
-          return 'OK', humans, AI, probables, info
+              AI = info['player_count'] # initialise to "all players"
+              if info['player_count'] > 1:
+                # Check for players who've been playing for exactly the same time - they're AI
+                _durations = []
+                for p in range(players.values['player_count']):
+                  _durations.append(players.values['players'][p].values['duration'])
+                _durations.sort(reverse=True)
+                for p in range(players.values['player_count']):
+                  ################################################# disable test
+                  if 0 and _durations[0] == _durations[1] and \
+                    players.values['players'][p].values['duration'] == _durations[0]:
+                      probables += 1
+                      AI -= 1
+                      # Write this AI player's name
+                      ### self.driverFilter.addAI(players.values['players'][p].values['name'])
+                      #debug print(players.values['players'][p].values['name'], end=" ")
+                      #debug print(_durations[0])
+                  else:
+                    _player = players.values['players'][p].values['name']
+                    if self.driverFilter.match(_player) == 'Human':
+                      humans += 1
+                      AI -= 1
+                      self.players.append(_player)
+            if retry:
+              print('---> Server %s retry succeeded #%d' % (serverName, retry))
+            return 'OK', humans, AI, probables, info
+          except valve.source.a2s.NoResponseError:
+            _server.close()
+            pass
+
         except valve.source.a2s.NoResponseError:
           _server.close()
           pass
-
-      except valve.source.a2s.NoResponseError:
-        _server.close()
-        pass
-        #print('%s:%d timed out' % SERVER_ADDRESS)
+          print('---> Server %s timed out' % (serverName))
     else: # serverName not in self.serversDict
       return 'ServerNotInList', 0,0,0, 'ServerNotInList'
     return 'NoResponse', 0,0,0, 'NoResponse'
