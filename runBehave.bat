@@ -1,4 +1,6 @@
 setlocal
 
 path=%path%;env\scripts
-behave
+
+if '%1' == '' behave
+if not '%1' == '' behave --include %1

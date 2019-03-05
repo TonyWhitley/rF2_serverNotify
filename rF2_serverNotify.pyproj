@@ -31,6 +31,7 @@
     <Compile Include="steps\rF2_serversWithHumans.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="steps\serverCacheSteps.py" />
     <Compile Include="steps\steps.py" />
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +47,7 @@
     <Content Include="tests\features\AIdriverFilter.feature" />
     <Content Include="tests\features\jsonConfigFile.feature" />
     <Content Include="tests\features\rF2_liveServerNotify.feature" />
+    <Content Include="tests\features\rF2_serverCaches.feature" />
     <Content Include="tests\features\rF2_serverFiles.feature" />
   </ItemGroup>
   <ItemGroup>

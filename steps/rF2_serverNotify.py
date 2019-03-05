@@ -114,6 +114,34 @@ class Servers:
   def readServers(self):
     msq = valve.source.master_server.MasterServerQuerier()
     addresses = []
+    """
+      Filter code 	            What the filter returns
+      0x00 (NULL, empty string) All servers
+      \nor\[x] 	                A special filter, specifies that servers matching any of the following [x] conditions should not be returned
+      \nand\[x] 	              A special filter, specifies that servers matching all of the following [x] conditions should not be returned
+    ? \dedicated\1 	            Servers running dedicated
+      \secure\1 	              Servers using anti-cheat technology (VAC, but potentially others as well)
+      \gamedir\[mod] 	          Servers running the specified modification (ex. cstrike)
+    ? \map\[map] 	              Servers running the specified map (ex. cs_italy)
+      \linux\1 	                Servers running on a Linux platform
+      \password\0 	            Servers that are not password protected
+    * \empty\1 	                Servers that are not empty
+    ? \full\1 	                Servers that are not full
+      \proxy\1 	                Servers that are spectator proxies
+    * \appid\[appid] 	          Servers that are running game [appid]
+      \napp\[appid] 	          Servers that are NOT running game [appid] (This was introduced to block Left 4 Dead games from the Steam Server Browser)
+      \noplayers\1 	            Servers that are empty
+      \white\1 	                Servers that are whitelisted
+      \gametype\[tag,...] 	    Servers with all of the given tag(s) in sv_tags
+      \gamedata\[tag,...] 	    Servers with all of the given tag(s) in their 'hidden' tags (L4D2)
+      \gamedataor\[tag,...] 	  Servers with any of the given tag(s) in their 'hidden' tags (L4D2)
+    * \name_match\[hostname] 	  Servers with their hostname matching [hostname] (can use * as a wildcard)
+    ? \version_match\[version]  Servers running version [version] (can use * as a wildcard)
+      \collapse_addr_hash\1 	  Return only one server for each unique IP address matched
+      \gameaddr\[ip] 	          Return only servers on the specified IP address (port supported and optional)     
+    """
+    # find all non-empty servers:
+    # all_addresses = msq.find(appid='365960', empty=1)
     all_addresses = msq.find(appid='365960')
     for address in all_addresses:
       addresses.append(address)
@@ -135,6 +163,17 @@ class Servers:
       if r[1] != 'Timed out':
         self.serversDict[r[1]] = r[0]
     pass
+
+  def readSpecificServer(self, serverName):
+    msq = valve.source.master_server.MasterServerQuerier()
+    addresses = []
+    all_addresses = msq.find(name_match=serverName)
+    for address in all_addresses:
+      addresses.append(address)
+    if len(addresses):
+      return addresses[0]
+    else:
+      return 'ServerNotFound', 0
 
   def writeServersFile(self, filename):
     with open(filename, 'w') as file:
@@ -204,7 +243,6 @@ class Servers:
     humans = 0
     AI = 0 
     probables = 0
-    maxPlayers = 0
 
     if serverName in self.serversDict:
       for retry in range(3):
@@ -300,6 +338,10 @@ def readServersFile():
     print('Failed to read %s. Exiting.' % serversFilename)
     sys.exit(99)
 
+def readSpecificServer(serverName):
+  serverObj = Servers()
+  return serverObj.readSpecificServer(serverName)
+
 def alert(_server, _driver):
   pymsgbox.alert('%s' % _driver, '%s is active' % _server)
 
@@ -337,7 +379,7 @@ if __name__ == '__main__':
     _time = datetime.datetime.now().strftime('%I:%M %p')
     print('\nAt %s these servers were idle (checking at %dS intervals):' % (_time, interval))
     for server, status in serversDict.items():
-      status, track, maxPlayers = serverObj.getServerStatus(server) 
+      status, track = serverObj.getServerStatus(server) 
       if status == 'Active':
         alert(server, serverObj.players)
         sys.exit(0)

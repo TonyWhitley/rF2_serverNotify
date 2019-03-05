@@ -56,7 +56,7 @@ class JSONconfigFile:
 
 if __name__ == '__main__':
 
-  print('rF2_joinServer V0.1')
+  print('rF2_joinServer V0.2')
   print('===================')
 
   if len(sys.argv) > 1:
@@ -69,9 +69,7 @@ if __name__ == '__main__':
   #try:
   configFileO = JSONconfigFile(fname)
   
-  serverObj = rF2_serverNotify.readServersFile()
-  _ip_address = serverObj.getServerAddress(configFileO.server)
-  _port       = serverObj.getServerPort(configFileO.server)
+  _ip_address,_port = rF2_serverNotify.readSpecificServer(configFileO.server)
   _port = str(int(_port)-2)  # No idea why -2 is necessary but it works.
 
   if _ip_address != 'ServerNotFound':
