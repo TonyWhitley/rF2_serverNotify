@@ -17,25 +17,33 @@ import rF2_serverNotify
 
 class ServerQuery:
   def __init__(self):
-    self.serverObj = rF2_serverNotify.readServersFile()
+    print('Finding non-empty servers...')
+    self.serverObj = rF2_serverNotify.readNonEmptyServers()
+    print('Reading server names... (though we don\'t really need to)')
+    self.serverObj.readServerNames()
     self.newNames = []
 
     print('\nPress Esc to quit')
 
     servers = self.serverObj.getServerNames()
   
-    # Multi-thread querying all servers to speed things up
-    # (perhaps at the cost of missing some servers).
-    # make the Pool of workers
-    pool = ThreadPool(len(servers)//10) 
+    if 0:
+      # Multi-thread querying all servers to speed things up
+      # (perhaps at the cost of missing some servers).
+      # make the Pool of workers
+      pool = ThreadPool(len(servers)//10) 
 
-    # read the servers in their own threads
-    # and return the results
-    results = pool.map(self.serverIsActive, servers)
+      # read the servers in their own threads
+      # and return the results
+      results = pool.map(self.serverIsActive, servers)
 
-    # close the pool and wait for the work to finish 
-    pool.close() 
-    pool.join() 
+      # close the pool and wait for the work to finish 
+      pool.close() 
+      pool.join() 
+    else:
+      for server in servers:
+        #print('Checking server "%s"' % server)
+        self.serverIsActive(server)
     
   def serverIsActive(self, server):
     _status,_track = self.serverObj.getServerStatus(server) 
@@ -43,7 +51,7 @@ class ServerQuery:
       print('\nServer: %s (%s)\nhas these drivers who are not in the AI list "drivers.txt"' % (server, _track))
       #print(self.serverObj.players)
       for player in self.serverObj.players:
-        if player in self.newNames:
+        if 0: # player in self.newNames:
           # Player name found on two servers simultaneously - must be AI
           # Add this AI player's name to drivers.txt
           self.serverObj.driverFilter.addAI(player)

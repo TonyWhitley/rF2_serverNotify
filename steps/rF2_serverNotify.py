@@ -97,7 +97,7 @@ class Servers:
     self.serversDict = {}
     self.players = []
     self.driverFilter = DriversFilter('drivers.txt')
-  def readServer(self, address):
+  def readServerName(self, address):
     for retry in range(3):
       try:
         _server = valve.source.a2s.ServerQuerier(address)
@@ -109,11 +109,11 @@ class Servers:
       except valve.source.a2s.NoResponseError:
         _server.close()
         pass
-    print('%s:%d timed out' % address)
+    print(' (%s:%d timed out)' % address)
     return address, 'Timed out'
-  def readServers(self):
+  def readServers(self, notEmpty=False):
     msq = valve.source.master_server.MasterServerQuerier()
-    addresses = []
+    self.addresses = []
     """
       Filter code 	            What the filter returns
       0x00 (NULL, empty string) All servers
@@ -140,20 +140,25 @@ class Servers:
       \collapse_addr_hash\1 	  Return only one server for each unique IP address matched
       \gameaddr\[ip] 	          Return only servers on the specified IP address (port supported and optional)     
     """
-    # find all non-empty servers:
-    # all_addresses = msq.find(appid='365960', empty=1)
-    all_addresses = msq.find(appid='365960')
+    # notEmpty: only find servers with players (real or AI)
+    if notEmpty:
+      # find all non-empty servers:
+      all_addresses = msq.find(appid='365960', empty=1)
+    else:
+      all_addresses = msq.find(appid='365960')
+    #msq.close()
     for address in all_addresses:
-      addresses.append(address)
+      self.addresses.append(address)
 
+  def readServerNames(self):
     # Multi-thread querying all servers to speed things up
     # (perhaps at the cost of missing some servers).
     # make the Pool of workers
-    pool = ThreadPool(len(addresses)//10) 
+    pool = ThreadPool(len(self.addresses)//10) 
 
     # read the servers in their own threads
     # and return the results
-    results = pool.map(self.readServer, addresses)
+    results = pool.map(self.readServerName, self.addresses)
 
     # close the pool and wait for the work to finish 
     pool.close() 
@@ -168,6 +173,7 @@ class Servers:
     msq = valve.source.master_server.MasterServerQuerier()
     addresses = []
     all_addresses = msq.find(name_match=serverName)
+    msg.close()
     for address in all_addresses:
       addresses.append(address)
     if len(addresses):
@@ -298,6 +304,9 @@ class Servers:
   def getServerNames(self):
     return self.serversDict
 
+  def getServerAddresses(self):
+    return self.addresses
+
 class DriversFilter:
   """
   Use a file of names of AI drivers to check whether a driver is human.
@@ -331,6 +340,7 @@ def readServersFile():
     if not os.path.isfile(serversFilename):
       print('Stored file of available servers %s does not exist, creating it. This will take a couple of minutes...' % serversFilename)
       serverObj.readServers()
+      serverObj.readServerNames()
       serverObj.writeServersFile(serversFilename)
     serverObj.readServersFile(serversFilename)
     return serverObj
@@ -341,6 +351,11 @@ def readServersFile():
 def readSpecificServer(serverName):
   serverObj = Servers()
   return serverObj.readSpecificServer(serverName)
+
+def readNonEmptyServers():
+  serverObj = Servers()
+  serverObj.readServers(notEmpty=True)
+  return serverObj
 
 def alert(_server, _driver):
   pymsgbox.alert('%s' % _driver, '%s is active' % _server)
