@@ -30,6 +30,16 @@ from multiprocessing.dummy import Pool as ThreadPool
 import valve.source.a2s
 import valve.source.master_server
 
+#appID = '244210'  # Assetto Corsa NO
+#appID = '805550'  # Assetto Corsa Competitizione NO
+appID = '378860'  # Project Cars 2
+#appID = '310560'  # DiRT Rally NO
+appID = '737800'  # F1 2018 NO
+appID = '431600'  # Automobilista
+appID = '211500'  # RaceRoom_Racing_Experience NO
+appID = '339790'  # rFactor
+appID = '365960'  # rFactor 2
+
 class JSONconfigFile:
   """
   Two types of dictionary entries in the JSON file
@@ -143,12 +153,13 @@ class Servers:
     # notEmpty: only find servers with players (real or AI)
     if notEmpty:
       # find all non-empty servers:
-      all_addresses = msq.find(appid='365960', empty=1)
+      all_addresses = msq.find(appid=appID, empty=1)
     else:
-      all_addresses = msq.find(appid='365960')
+      all_addresses = msq.find(appid=appID)
     #msq.close()
     for address in all_addresses:
       self.addresses.append(address)
+    pass
 
   def readServerNames(self):
     # Multi-thread querying all servers to speed things up
@@ -173,7 +184,8 @@ class Servers:
     msq = valve.source.master_server.MasterServerQuerier()
     addresses = []
     all_addresses = msq.find(name_match=serverName)
-    msg.close()
+    
+    #msq.close()
     for address in all_addresses:
       addresses.append(address)
     if len(addresses):
