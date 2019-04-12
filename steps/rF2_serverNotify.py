@@ -30,6 +30,11 @@ from multiprocessing.dummy import Pool as ThreadPool
 import valve.source.a2s
 import valve.source.master_server
 
+BUILD_REVISION = 34 # The git commit count
+versionStr = 'rF2_serverNotify V0.6.%d' % BUILD_REVISION
+versionDate = '2019-04-11'
+
+
 #appID = '244210'  # Assetto Corsa NO
 #appID = '805550'  # Assetto Corsa Competitizione NO
 appID = '378860'  # Project Cars 2
@@ -378,8 +383,8 @@ if __name__ == '__main__':
   else:
     fname = 'rF2_serverNotify.json'
 
-  print('rF2_serverNotify V0.6')
-  print('=====================')
+  print(versionStr)
+  print('=' * len(versionStr))
   print('Using config file %s\n' % fname)
 
   serverObj = readServersFile()

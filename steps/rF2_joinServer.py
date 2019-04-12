@@ -19,6 +19,10 @@ from   msvcrt import getch
 
 import rF2_serverNotify
 
+BUILD_REVISION = 34 # The git commit count
+versionStr = 'rF2_joinServer V0.3.%d' % BUILD_REVISION
+versionDate = '2019-04-11'
+
 class JSONconfigFile:
   """
   Three dictionary entries in the JSON file
@@ -54,10 +58,23 @@ class JSONconfigFile:
       else:
         print('Bad key "%s" in %s' % (key, _fname))
 
+def runRf2Online(SteamExe, serverName, password):
+  _ip_address,_port = rF2_serverNotify.readSpecificServer(serverName)
+  _port = str(int(_port)-2)  # No idea why -2 is necessary but it works.
+
+  if _ip_address != 'ServerNotFound':
+    _cmd =  '"%s" -applaunch 365960 +autojoin="%s" +connect=:%s@%s:%s +multiplayer +path=".."' % (SteamExe, serverName, password, _ip_address, _port)
+    print(_cmd)
+    subprocess.Popen(_cmd)  # Popen doesn't wait for completion (Steam closed)
+    _status = 'OK'
+  else:
+    _status = ('Server "%s" not found' % serverName)
+  return _status 
+
 if __name__ == '__main__':
 
-  print('rF2_joinServer V0.2')
-  print('===================')
+  print(versionStr)
+  print('=' * len(versionStr))
 
   if len(sys.argv) > 1:
     fname = sys.argv[1]
@@ -68,18 +85,10 @@ if __name__ == '__main__':
 
   #try:
   configFileO = JSONconfigFile(fname)
+
+  status = runRf2Online(configFileO.SteamExe, configFileO.server, configFileO.password)
+  print(status)
   
-  _ip_address,_port = rF2_serverNotify.readSpecificServer(configFileO.server)
-  _port = str(int(_port)-2)  # No idea why -2 is necessary but it works.
-
-  if _ip_address != 'ServerNotFound':
-    _cmd =  '"%s" -applaunch 365960 +autojoin="%s" +connect=:%s@%s:%s +multiplayer +path=".."' % (configFileO.SteamExe, configFileO.server, configFileO.password, _ip_address, _port)
-    print(_cmd)
-    subprocess.call(_cmd)
-  else:
-    print('Server "%s" not found' % configFileO.server)
-
-
   print('\n\nAll done. Press a key...')
   getch()
 

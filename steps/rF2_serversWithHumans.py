@@ -15,6 +15,10 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 import rF2_serverNotify
 
+BUILD_REVISION = 34 # The git commit count
+versionStr = 'rF2_serversWithHumans V0.4.%d' % BUILD_REVISION
+versionDate = '2019-04-11'
+
 class ServerQuery:
   def __init__(self):
     print('Finding non-empty servers...')
@@ -69,8 +73,8 @@ class ServerQuery:
 
 if __name__ == '__main__':
 
-  print('rF2_serversWithHumans V0.4')
-  print('==========================')
+  print(versionStr)
+  print('=' * len(versionStr))
 
   ServerQuery()
 
