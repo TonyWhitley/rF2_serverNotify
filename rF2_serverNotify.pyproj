@@ -59,6 +59,15 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
+    <Interpreter Include="mpypy\">
+      <Id>mpypy</Id>
+      <Version>3.6</Version>
+      <Description>mpypy (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
     <Interpreter Include="valve\">
       <Id>valve</Id>
       <Version>3.6</Version>
