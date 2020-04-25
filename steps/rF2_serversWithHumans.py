@@ -50,6 +50,9 @@ class ServerQuery:
         self.serverIsActive(server)
     
   def serverIsActive(self, server):
+    """
+    server: server name?
+    """
     _status,_track = self.serverObj.getServerStatus(server) 
     if _status == 'Active':
       print('\nServer: %s (%s)\nhas these drivers who are not in the AI list "drivers.txt"' % (server, _track))

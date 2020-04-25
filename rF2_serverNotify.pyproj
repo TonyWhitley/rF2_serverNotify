@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{aa4be2fb-2ae3-4b2b-8677-0cbcb2f75bac}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>steps\rF2_joinServer.py</StartupFile>
+    <StartupFile>steps\rF2_serversWithHumans.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -16,6 +16,8 @@
     <IsWindowsApplication>False</IsWindowsApplication>
     <InterpreterId>MSBuild|valve|$(MSBuildProjectFullPath)</InterpreterId>
     <Environment>rF2_joinServer_SiG.json</Environment>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
+    <TestFramework>unittest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -32,6 +34,12 @@
     </Compile>
     <Compile Include="steps\serverCacheSteps.py" />
     <Compile Include="steps\steps.py" />
+    <Compile Include="tests\testServerInfo.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="steps" />

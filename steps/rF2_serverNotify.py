@@ -254,6 +254,27 @@ class Servers:
   can be unpickled much more quickly.  That's _server.info() and _server.players()
   """
 
+  def readServerInfo(self,serverAddress, retries=3):
+    for retry in range(retries):
+      try:
+        _server = valve.source.a2s.ServerQuerier(serverAddress)
+        try:
+          info = _server.info()
+          if info['player_count'] != 0:
+            players = _server.players()
+            _server.close()
+            return info, players
+          else:
+            _server.close()
+            return info, None
+        except valve.source.a2s.NoResponseError:
+          _server.close()
+          pass
+      except valve.source.a2s.NoResponseError:
+        _server.close()
+        pass
+      return '---> Server timed out', None
+
   def getPlayerCounts(self, serverName):
     """
     Read the server status, return
