@@ -15,9 +15,9 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 import rF2_serverNotify
 
-BUILD_REVISION = 34 # The git commit count
+BUILD_REVISION = 38 # The git commit count
 versionStr = 'rF2_serversWithHumans V0.4.%d' % BUILD_REVISION
-versionDate = '2019-04-11'
+versionDate = '2020-04-25'
 
 class ServerQuery:
   def __init__(self):
