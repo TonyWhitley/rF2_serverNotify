@@ -1,3 +1,4 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # rF2_serverNotify
 A simple program to scan a set of rFactor 2 servers and pop up a notification if someone joins a server that had no drivers.
 
