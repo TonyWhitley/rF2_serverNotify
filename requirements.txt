@@ -10,7 +10,7 @@ monotonic==1.4
 parse==1.8.2
 parse-type==0.4.2
 pefile==2017.11.5
-pip==19.0.3
+pip==21.1
 PyInstaller==3.3.1
 PyMsgBox==1.0.6
 pypiwin32==220
