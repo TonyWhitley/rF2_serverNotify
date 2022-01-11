@@ -25,14 +25,14 @@ import time
 from   msvcrt import kbhit, getch
 if __name__ == '__main__':
   import pymsgbox
-from multiprocessing.dummy import Pool as ThreadPool 
+from multiprocessing.dummy import Pool as ThreadPool
 
 import valve.source.a2s
 import valve.source.master_server
 
-BUILD_REVISION = 34 # The git commit count
+BUILD_REVISION = 38 # The git commit count
 versionStr = 'rF2_serverNotify V0.6.%d' % BUILD_REVISION
-versionDate = '2019-04-11'
+versionDate = '2020-04-25'
 
 
 #appID = '244210'  # Assetto Corsa NO
@@ -153,7 +153,7 @@ class Servers:
     * \name_match\[hostname] 	  Servers with their hostname matching [hostname] (can use * as a wildcard)
     ? \version_match\[version]  Servers running version [version] (can use * as a wildcard)
       \collapse_addr_hash\1 	  Return only one server for each unique IP address matched
-      \gameaddr\[ip] 	          Return only servers on the specified IP address (port supported and optional)     
+      \gameaddr\[ip] 	          Return only servers on the specified IP address (port supported and optional)
     """
     # notEmpty: only find servers with players (real or AI)
     if notEmpty:
@@ -170,15 +170,15 @@ class Servers:
     # Multi-thread querying all servers to speed things up
     # (perhaps at the cost of missing some servers).
     # make the Pool of workers
-    pool = ThreadPool(len(self.addresses)//10) 
+    pool = ThreadPool(len(self.addresses)//10)
 
     # read the servers in their own threads
     # and return the results
     results = pool.map(self.readServerName, self.addresses)
 
-    # close the pool and wait for the work to finish 
-    pool.close() 
-    pool.join() 
+    # close the pool and wait for the work to finish
+    pool.close()
+    pool.join()
 
     for r in results:
       if r[1] != 'Timed out':
@@ -189,7 +189,7 @@ class Servers:
     msq = valve.source.master_server.MasterServerQuerier()
     addresses = []
     all_addresses = msq.find(name_match=serverName)
-    
+
     #msq.close()
     for address in all_addresses:
       addresses.append(address)
@@ -254,6 +254,27 @@ class Servers:
   can be unpickled much more quickly.  That's _server.info() and _server.players()
   """
 
+  def readServerInfo(self,serverAddress, retries=3):
+    for retry in range(retries):
+      try:
+        _server = valve.source.a2s.ServerQuerier(serverAddress)
+        try:
+          info = _server.info()
+          if info['player_count'] != 0:
+            players = _server.players()
+            _server.close()
+            return info, players
+          else:
+            _server.close()
+            return info, None
+        except valve.source.a2s.NoResponseError:
+          _server.close()
+          pass
+      except valve.source.a2s.NoResponseError:
+        _server.close()
+        pass
+      return '---> Server timed out', None
+
   def getPlayerCounts(self, serverName):
     """
     Read the server status, return
@@ -264,7 +285,7 @@ class Servers:
       Maximum number of players
     """
     humans = 0
-    AI = 0 
+    AI = 0
     probables = 0
 
     if serverName in self.serversDict:
@@ -279,7 +300,7 @@ class Servers:
               players = _server.players()
               _server.close()
 
-            
+
               AI = info['player_count'] # initialise to "all players"
               if info['player_count'] > 1:
                 # Check for players who've been playing for exactly the same time - they're AI
@@ -411,7 +432,7 @@ if __name__ == '__main__':
     _time = datetime.datetime.now().strftime('%I:%M %p')
     print('\nAt %s these servers were idle (checking at %dS intervals):' % (_time, interval))
     for server, status in serversDict.items():
-      status, track = serverObj.getServerStatus(server) 
+      status, track = serverObj.getServerStatus(server)
       if status == 'Active':
         alert(server, serverObj.players)
         sys.exit(0)

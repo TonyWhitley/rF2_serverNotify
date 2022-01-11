@@ -28,4 +28,6 @@
 /SIG_command.bat
 /.mypy_cache/3.6
 /mpypy
+/.vs/rF2_serverNotify/v16/TestStore/0
+/tests/__pycache__
 *.pyc

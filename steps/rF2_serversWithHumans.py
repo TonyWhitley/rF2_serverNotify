@@ -15,9 +15,9 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 import rF2_serverNotify
 
-BUILD_REVISION = 34 # The git commit count
+BUILD_REVISION = 38 # The git commit count
 versionStr = 'rF2_serversWithHumans V0.4.%d' % BUILD_REVISION
-versionDate = '2019-04-11'
+versionDate = '2020-04-25'
 
 class ServerQuery:
   def __init__(self):
@@ -50,6 +50,9 @@ class ServerQuery:
         self.serverIsActive(server)
     
   def serverIsActive(self, server):
+    """
+    server: server name?
+    """
     _status,_track = self.serverObj.getServerStatus(server) 
     if _status == 'Active':
       print('\nServer: %s (%s)\nhas these drivers who are not in the AI list "drivers.txt"' % (server, _track))
