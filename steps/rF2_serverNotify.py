@@ -16,7 +16,7 @@ A data file servers.file.json is created automatically the first time
 It contains all the servers and their addresses.
 """
 from __future__ import print_function  # Python 2 compatibility
-
+print('rF2_serverNotify')
 import os
 import sys
 import datetime
