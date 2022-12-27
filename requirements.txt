@@ -16,6 +16,6 @@ PyMsgBox==1.0.6
 pypiwin32==220
 python-valve==0.2.1
 requests==2.20.0
-setuptools==28.8.0
+setuptools==65.5.1
 six==1.11.0
 urllib3==1.26.5
